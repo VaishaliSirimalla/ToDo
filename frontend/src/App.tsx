@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Task from "../components/Task";
 import Header from "../components/Header";
 import "./App.css";
@@ -15,7 +15,7 @@ export interface TaskType {
 }
 
 function App() {
-  const [todoList, setTodoList] = useState<TaskType[]>(initialTasks);
+  const [todoList, setTodoList] = useState<TaskType[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editTask, setEditTask] = useState<TaskType | null>(null);
 
@@ -32,6 +32,21 @@ function App() {
   const handleDelete = (id: number) => {
     setTodoList((prev) => prev.filter((task) => task.id !== id));
   };
+
+   useEffect(() => {
+    const fetchTodos = async () =>{
+      try {
+        const response = await fetch('http://localhost:3000/api/todos');
+        const todoData = await response.json();
+
+        setTodoList(todoData);
+        // console.log("todoData: ",todoData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchTodos();
+  },[]);
 
   const eachTask = todoList.map((todo) => (
     <Task
@@ -50,7 +65,7 @@ function App() {
         modalOpen={modalOpen}
         handleClose={handleClose}
         setTodoList={setTodoList}
-        editTask={editTask} // 👈 pass here
+        editTask={editTask} 
       />
     </div>
   );

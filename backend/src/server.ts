@@ -3,6 +3,7 @@ dotenv.config();
 // console.log("Mongo URI:", process.env.MONGO_URI);
 // console.log("Port:", process.env.PORT);
 import todoRoutes from "../src/routes/todoRoutes"
+import cors from "cors"
 
 
 import express, {Application} from "express";
@@ -11,7 +12,12 @@ import mongoose from "mongoose";
 const app: Application=express();
 const PORT = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI as string;
+
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:5173", // React app
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+}))
 
 app.use("/api/todos", todoRoutes)
 mongoose
