@@ -27,7 +27,7 @@ router.get("/", async (_req, res) => {
 // Update todo by id
 router.put("/:id", async (req, res) => {
   try {
-    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true,runValidators: true });
     res.json(todo);
   } catch (err) {
     res.status(400).json({ error: "Failed to update todo" });

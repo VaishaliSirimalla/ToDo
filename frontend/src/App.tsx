@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import Task from "../components/Task";
 import Header from "../components/Header";
 import "./App.css";
-import initialTasks from "../data";
+// import initialTasks from "../data";
 import AddTask from "../components/AddTask";
 
 // Define a Task type
