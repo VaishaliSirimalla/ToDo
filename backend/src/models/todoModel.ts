@@ -4,7 +4,7 @@ export interface ToDoInterface extends Document{
     title : string;
     completed : boolean;
     status : "to-do" | "in-progress" | "done";
-    priority : "high" | "medium" | "low";
+    priority : "High" | "Medium" | "Low";
     createdAt: Date;
 }
 
@@ -25,8 +25,8 @@ const todoScehema = new Schema<ToDoInterface>({
     },
     priority:{
         type: String,
-        enum:["high","medium","low"],
-        default :"low",
+        enum:["High","Medium","Low"],
+        default :"Low",
     },
     createdAt:{
         type: Date,

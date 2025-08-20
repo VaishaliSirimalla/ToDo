@@ -7,7 +7,7 @@ import AddTask from "../components/AddTask";
 
 // Define a Task type
 export interface TaskType {
-  id: number;
+  _id: string;
   title: string;
   priority: string;
   status: string;
@@ -29,9 +29,24 @@ function App() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    setTodoList((prev) => prev.filter((task) => task.id !== id));
-  };
+  const handleDelete = async (_id: string) => {
+  try {
+    // 🔹 Call backend DELETE API
+    const response = await fetch(`http://localhost:3000/api/todos/${_id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      // 🔹 Remove from frontend state
+      setTodoList((prev) => prev.filter((task) => task._id !== _id));
+    } else {
+      console.error("Failed to delete todo");
+    }
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+  }
+};
+
 
    useEffect(() => {
     const fetchTodos = async () =>{
@@ -50,10 +65,10 @@ function App() {
 
   const eachTask = todoList.map((todo) => (
     <Task
-      key={todo.id}
+      key={todo._id}
       {...todo}
       onEdit={() => handleOpen(todo)} // click edit
-      onDelete={() => handleDelete(todo.id)}
+      onDelete={() => handleDelete(todo._id)}
     />
   ));
 

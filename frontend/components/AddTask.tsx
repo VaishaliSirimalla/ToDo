@@ -30,34 +30,55 @@ export default function AddTask({
 
   if (!modalOpen) return null;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
 
-    if (!title.trim()) return;
+  if (!title.trim()) return;
 
+  try {
     if (editTask) {
-      // Update existing task
+      // Update existing task (PUT request)
+      const response = await fetch(`http://localhost:3000/api/todos/${editTask._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, priority }),
+      });
+
+      const updatedTask = await response.json();
+
       setTodoList((prevTodo) =>
         prevTodo.map((task) =>
-          task.id === editTask.id ? { ...task, title, priority } : task
+          task._id === editTask._id ? updatedTask : task
         )
       );
     } else {
-      // Add new task
-      setTodoList((prevTodo) => [
-        {
-          id: Date.now(),
-          title,
-          priority,
-          status: "To Do",
-          completed: false,
+      // Add new task (POST request)
+      const response = await fetch("http://localhost:3000/api/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        ...prevTodo,
-      ]);
+        body: JSON.stringify({
+          title,
+          priority: priority, 
+          status: "to-do",
+          completed: false,
+        }),
+      });
+
+      const newTask = await response.json();
+
+      setTodoList((prevTodo) => [newTask, ...prevTodo]);
     }
 
     handleClose();
+  } catch (error) {
+    console.error("Error saving task:", error);
   }
+}
+
 
   return (
     <div className="modal">

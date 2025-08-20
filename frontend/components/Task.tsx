@@ -1,6 +1,6 @@
 // Define the Task props type
 interface TaskProps {
-  id: number;
+  _id: string;
   title: string;
   priority: "High" | "Medium" | "Low" | string;
   status: string;
