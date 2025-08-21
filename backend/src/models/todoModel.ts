@@ -3,7 +3,7 @@ import {Schema, model, Document} from "mongoose"
 export interface ToDoInterface extends Document{
     title : string;
     completed : boolean;
-    status : "to-do" | "in-progress" | "done";
+    status : "To Do" | "In Progress" | "Done";
     priority : "High" | "Medium" | "Low";
     createdAt: Date;
 }
@@ -20,8 +20,8 @@ const todoScehema = new Schema<ToDoInterface>({
     },
     status:{
         type: String,
-        enum:["to-do","in-progress","done"],
-        default :"to-do",
+        enum:["To Do","In Progress","Done"],
+        default :"To Do",
     },
     priority:{
         type: String,

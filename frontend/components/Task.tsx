@@ -6,6 +6,7 @@ interface TaskProps {
   status: string;
   onEdit: () => void;
   onDelete: () => void;
+  onStatusChange:(_id:string, newStatus:string) => void;
 }
 
 export default function Task(props: TaskProps) {
@@ -21,6 +22,14 @@ export default function Task(props: TaskProps) {
         return "black";
     }
   };
+
+  function getProgress(status: string): number {
+    const circumference = 2 * Math.PI * 11; 
+    let percent = 0;
+    if (status === "In Progress") percent = 50;
+    if (status === "Done") percent = 100;
+    return circumference - (percent / 100) * circumference;
+  }
 
   return (
     <>
@@ -42,7 +51,11 @@ export default function Task(props: TaskProps) {
           </span>
         </div>
         <div className="divStatus">
-          <button className="status">{props.status}</button>
+          <button className="status" onClick={()=>{
+            const status = ["To Do", "In Progress","Done"]
+            const newStatus = status[(status.indexOf(props.status) + 1) % status.length];
+            props.onStatusChange(props._id, newStatus)
+          }}>{props.status}</button>
         </div>
         <div className="progress">
           <svg
@@ -65,6 +78,7 @@ export default function Task(props: TaskProps) {
               r="11"
               strokeWidth="2px"
               transform="rotate(-90 12 12)"
+              style={{strokeDashoffset: getProgress(props.status)}}
             ></circle>
           </svg>
         </div>

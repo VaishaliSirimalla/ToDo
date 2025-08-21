@@ -47,6 +47,31 @@ function App() {
   }
 };
 
+const handleStatusChange = async (id: string, newStatus: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (response.ok) {
+      const updatedTask = await response.json();
+      setTodoList((prev) =>
+        prev.map((task) =>
+          task._id === id ? { ...task, status: updatedTask.status } : task
+        )
+      );
+    } else {
+      console.error("Failed to update status");
+    }
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
+};
+
 
    useEffect(() => {
     const fetchTodos = async () =>{
@@ -67,8 +92,9 @@ function App() {
     <Task
       key={todo._id}
       {...todo}
-      onEdit={() => handleOpen(todo)} // click edit
-      onDelete={() => handleDelete(todo._id)}
+      onEdit={() => handleOpen(todo)} // edit
+      onDelete={() => handleDelete(todo._id)} // delete
+      onStatusChange={handleStatusChange} // status chg
     />
   ));
 

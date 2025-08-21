@@ -22,11 +22,11 @@ export default function AddTask({
     if (editTask) {
       setPriority(editTask.priority);
       setTitle(editTask.title);
-    } else {
+    } else if(modalOpen) {
       setPriority("Low");
       setTitle("");
     }
-  }, [editTask]);
+  }, [editTask, modalOpen]);
 
   if (!modalOpen) return null;
 
@@ -63,7 +63,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         body: JSON.stringify({
           title,
           priority: priority, 
-          status: "to-do",
+          status: "To Do",
           completed: false,
         }),
       });
@@ -98,6 +98,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                autoComplete="off"
               />
             </div>
 
