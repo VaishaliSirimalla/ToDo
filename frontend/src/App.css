@@ -149,3 +149,23 @@ body{
 .grayColor{
   color: gray;
 }
+
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button.active {
+  background: #713fff;
+  color: white;
+  font-weight: bold;
+}

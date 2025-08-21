@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import "./App.css";
 // import initialTasks from "../data";
 import AddTask from "../components/AddTask";
+// import Pages from "../components/Pages"
 
 // Define a Task type
 export interface TaskType {
@@ -18,6 +19,8 @@ function App() {
   const [todoList, setTodoList] = useState<TaskType[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editTask, setEditTask] = useState<TaskType | null>(null);
+  const [ page, setPage ] = useState(1);
+  const [ totalPages, setTotalPages ] = useState(1);
 
   const handleClose = () => {
     setModalOpen(false);
@@ -31,13 +34,13 @@ function App() {
 
   const handleDelete = async (_id: string) => {
   try {
-    // 🔹 Call backend DELETE API
+    // Call backend DELETE API
     const response = await fetch(`http://localhost:3000/api/todos/${_id}`, {
       method: "DELETE",
     });
 
     if (response.ok) {
-      // 🔹 Remove from frontend state
+      // Remove from frontend state
       setTodoList((prev) => prev.filter((task) => task._id !== _id));
     } else {
       console.error("Failed to delete todo");
@@ -72,21 +75,37 @@ const handleStatusChange = async (id: string, newStatus: string) => {
   }
 };
 
+function renderPagination(totalPages: number, currentPage: number) {
+  const buttons = [];
+  for (let i = 1; i <= totalPages; i++) {
+    buttons.push(
+      <button
+        key={i}
+        onClick={() => setPage(i)}
+        className={currentPage === i ? "active" : ""}
+      >
+        {i}
+      </button>
+    );
+  }
+  return buttons;
+}
 
    useEffect(() => {
     const fetchTodos = async () =>{
       try {
-        const response = await fetch('http://localhost:3000/api/todos');
+        const response = await fetch(`http://localhost:3000/api/todos?page=${page}&limit=3`);
         const todoData = await response.json();
 
-        setTodoList(todoData);
+        setTodoList(todoData.todos);
+        setTotalPages(todoData.totalPages);
         // console.log("todoData: ",todoData);
       } catch (error) {
         console.log(error);
       }
     }
     fetchTodos();
-  },[]);
+  },[page]);
 
   const eachTask = todoList.map((todo) => (
     <Task
@@ -108,6 +127,10 @@ const handleStatusChange = async (id: string, newStatus: string) => {
         setTodoList={setTodoList}
         editTask={editTask} 
       />
+
+      <div className="pagination">
+        {renderPagination(totalPages, page)}
+      </div>
     </div>
   );
 }

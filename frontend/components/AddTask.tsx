@@ -70,7 +70,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
       const newTask = await response.json();
 
-      setTodoList((prevTodo) => [newTask, ...prevTodo]);
+      setTodoList((prevTodo) => [...prevTodo, newTask]);
     }
 
     handleClose();

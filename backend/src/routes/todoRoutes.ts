@@ -15,10 +15,18 @@ router.post("/", async (req, res) => {
 });
 
 // Get all todos
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 3;
   try {
-    const todos = await Todo.find();
-    res.json(todos);
+    const totalTodos = await Todo.countDocuments(); // total count
+    const totalPages = Math.ceil(totalTodos / limit);
+
+    const todos = await Todo.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.json({ todos, totalPages });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch todos" });
   }
