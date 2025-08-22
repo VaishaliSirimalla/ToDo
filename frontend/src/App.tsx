@@ -5,6 +5,7 @@ import "./App.css";
 // import initialTasks from "../data";
 import AddTask from "../components/AddTask";
 // import Pages from "../components/Pages"
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Define a Task type
 export interface TaskType {
@@ -35,7 +36,7 @@ function App() {
   const handleDelete = async (_id: string) => {
   try {
     // Call backend DELETE API
-    const response = await fetch(`http://localhost:3000/api/todos/${_id}`, {
+    const response = await fetch(`${API_URL}/${_id}`, {
       method: "DELETE",
     });
 
@@ -52,7 +53,7 @@ function App() {
 
 const handleStatusChange = async (id: string, newStatus: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
+    const response = await fetch(`${API_URL}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +95,7 @@ function renderPagination(totalPages: number, currentPage: number) {
    useEffect(() => {
     const fetchTodos = async () =>{
       try {
-        const response = await fetch(`http://localhost:3000/api/todos?page=${page}&limit=3`);
+        const response = await fetch(`${API_URL}?page=${page}&limit=3`);
         const todoData = await response.json();
 
         setTodoList(todoData.todos);

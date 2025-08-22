@@ -119,7 +119,6 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
                 ))}
               </ul>
             </div>
-
             <div className="add-task-button">
               <button type="submit">{editTask ? "Update" : "Add"}</button>
             </div>
