@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "../src/css/AddTask.css";
 import type { TaskType } from "../src/App" // reuse TaskType interface
+// import dotenv from "dotenv"
+// dotenv.config();
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface AddTaskProps {
   modalOpen: boolean;
@@ -17,6 +20,7 @@ export default function AddTask({
 }: AddTaskProps) {
   const [priority, setPriority] = useState<string>("Low");
   const [title, setTitle] = useState<string>("");
+  
 
   useEffect(() => {
     if (editTask) {
@@ -38,7 +42,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
   try {
     if (editTask) {
       // Update existing task (PUT request)
-      const response = await fetch(`http://localhost:3000/api/todos/${editTask._id}`, {
+      const response = await fetch(`${API_URL}/${editTask._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +59,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       );
     } else {
       // Add new task (POST request)
-      const response = await fetch("http://localhost:3000/api/todos", {
+      const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +82,6 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     console.error("Error saving task:", error);
   }
 }
-
 
   return (
     <div className="modal">

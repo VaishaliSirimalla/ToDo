@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 // Define the Task props type
 interface TaskProps {
   _id: string;
@@ -10,6 +12,7 @@ interface TaskProps {
 }
 
 export default function Task(props: TaskProps) {
+  const [ isDisable, setIsDisable] = useState(false);
   const getColor = (priorityColor: string): string => {
     switch (priorityColor) {
       case "High":
@@ -31,6 +34,17 @@ export default function Task(props: TaskProps) {
     return circumference - (percent / 100) * circumference;
   }
 
+  const handleMultipleClick = () =>{
+    
+    const status = ["To Do", "In Progress","Done"]
+    const newStatus = status[(status.indexOf(props.status) + 1) % status.length];
+    props.onStatusChange(props._id, newStatus)
+    setIsDisable(true);
+    setTimeout(()=>{
+      setIsDisable(false);
+    },2000)
+    
+  }
   return (
     <>
       <div className="cards">
@@ -51,11 +65,7 @@ export default function Task(props: TaskProps) {
           </span>
         </div>
         <div className="divStatus">
-          <button className="status" onClick={()=>{
-            const status = ["To Do", "In Progress","Done"]
-            const newStatus = status[(status.indexOf(props.status) + 1) % status.length];
-            props.onStatusChange(props._id, newStatus)
-          }}>{props.status}</button>
+          <button className="status" onClick={handleMultipleClick} disabled={isDisable}>{props.status}</button>
         </div>
         <div className="progress">
           <svg
