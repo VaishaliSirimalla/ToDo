@@ -140,6 +140,8 @@ function renderPagination(totalPages: number, currentPage: number) {
         handleClose={handleClose}
         setTodoList={setTodoList}
         editTask={editTask} 
+        setPage={setPage}
+        setTotalPages={setTotalPages}
       />
 
       <DeleteTask

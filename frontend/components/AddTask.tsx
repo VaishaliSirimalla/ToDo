@@ -4,12 +4,15 @@ import type { TaskType } from "../src/App" // reuse TaskType interface
 // import dotenv from "dotenv"
 // dotenv.config();
 const API_URL = import.meta.env.VITE_API_URL;
+// import { useRef}
 
 interface AddTaskProps {
   modalOpen: boolean;
   handleClose: () => void;
   setTodoList: React.Dispatch<React.SetStateAction<TaskType[]>>;
   editTask: TaskType | null;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function AddTask({
@@ -17,10 +20,13 @@ export default function AddTask({
   handleClose,
   setTodoList,
   editTask,
+  setPage,    
+  setTotalPages
 }: AddTaskProps) {
   const [priority, setPriority] = useState<string>("Low");
   const [title, setTitle] = useState<string>("");
   
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (editTask) {
@@ -74,7 +80,12 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
       const newTask = await response.json();
 
+      // Update list
       setTodoList((prevTodo) => [...prevTodo, newTask]);
+
+      // Update pagination
+      setTotalPages((prevTotal) => prevTotal + 1);
+      setPage((prevPage) => prevPage + 1);
     }
 
     handleClose();
@@ -93,14 +104,21 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
               <img onClick={handleClose} src="../src/assets/close.png"alt="close" />
             </div>
 
-            <div className="add-task-input">
+            <div className="add-task-input" >
               <span className="grayColor">Task</span>
               <input
+              // ref={inputRef}
                 name="task"
                 placeholder="Type your task here..."
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                // onFocus={() => {
+                //   // Clear browser suggestions on focus
+                //   if (inputRef.current) {
+                //     inputRef.current.value = "";
+                //   }
+                // }}
                 autoComplete="off"
               />
             </div>
