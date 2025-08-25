@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import "./App.css";
 // import initialTasks from "../data";
 import AddTask from "../components/AddTask";
+import DeleteTask from "../components/DeleteTask"
 // import Pages from "../components/Pages"
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -22,6 +23,8 @@ function App() {
   const [editTask, setEditTask] = useState<TaskType | null>(null);
   const [ page, setPage ] = useState(1);
   const [ totalPages, setTotalPages ] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<TaskType | null>(null);
 
   const handleClose = () => {
     setModalOpen(false);
@@ -32,6 +35,16 @@ function App() {
     setEditTask(task); // null → add, object → edit
     setModalOpen(true);
   };
+
+  const openDeleteModal = (task: TaskType) => {
+  setTaskToDelete(task);
+  setDeleteModalOpen(true);
+};
+
+const closeDeleteModal = () => {
+  setDeleteModalOpen(false);
+  setTaskToDelete(null);
+};
 
   const handleDelete = async (_id: string) => {
   try {
@@ -113,7 +126,7 @@ function renderPagination(totalPages: number, currentPage: number) {
       key={todo._id}
       {...todo}
       onEdit={() => handleOpen(todo)} // edit
-      onDelete={() => handleDelete(todo._id)} // delete
+      onDelete={() => openDeleteModal(todo)} // delete
       onStatusChange={handleStatusChange} // status chg
     />
   ));
@@ -127,6 +140,13 @@ function renderPagination(totalPages: number, currentPage: number) {
         handleClose={handleClose}
         setTodoList={setTodoList}
         editTask={editTask} 
+      />
+
+      <DeleteTask
+        modalOpen={deleteModalOpen}
+        handleClose={closeDeleteModal}
+        onDelete={handleDelete}
+        task={taskToDelete}
       />
 
       <div className="pagination">
